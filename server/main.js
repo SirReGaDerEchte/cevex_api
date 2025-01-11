@@ -22,6 +22,7 @@ app.post('/data', (req, res) => {
     
     cevex.retrieveData(username, password, school)
     .then((result) => {
+        // TODO: wird auch aufgerufen, wenn 404 (falsche Eingabe bei Schule)
         frettir.sendMessage("Successfully retrieved userdata.")
         res.status(200)
         res.send(result)
@@ -32,3 +33,19 @@ app.listen(port, function() {
     frettir.sendMessage("cevex_api is now online.")
     console.log('Listening on port', port)
 })
+
+process.on('SIGINT', () => {
+    shutdownLogic();
+});
+
+process.on('SIGTERM', () => {
+    shutdownLogic();
+})
+
+function shutdownLogic() {
+    console.log("Shutting down...")
+    frettir.sendMessage(`cevex_api is now offline.`);
+    setTimeout(() => {
+        process.exit();
+    }, 1000);
+}
