@@ -1,6 +1,6 @@
 const username = "" // your cevex/homeinfopoint username
 const password = "" // your cevex/homeinfopoint password
-const school = "" // your cevex/homeinfopoint password
+const school = "" // your school's name
 
 const response = await fetch("https://cevex.sirrega.de/data", {
     method: 'POST',
