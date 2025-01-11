@@ -9,13 +9,14 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/data', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+    const school = req.body.school;
     
-    if (!username || !password) {
-        res.status(400).json({ error: 'Username and password required.' })
+    if (!username || !password || !school) {
+        res.status(400).json({ error: 'Username, password and school required.' })
         return;
     }
 
-    cevex.retrieveData(username, password)
+    cevex.retrieveData(username, password, school)
     .then((result) => {
         res.status(200)
         res.send(result)

@@ -1,14 +1,16 @@
-const baseUrl = ""
-const loginUrl = "";
+let baseUrl;
+let loginUrl;
 
-async function retrieveData(username, password) {
+async function retrieveData(username, password, school) {
+
+    baseUrl = `https://homeinfopoint.de/${school}/default.php`;
+    loginUrl = `https://homeinfopoint.de/${school}/login.php`;
 
     const phpsessid = await getSessionId();
 
     return new Promise((resolve) => {
         validateSessionId(username, password, phpsessid)
         .then(result => {
-            console.log(result)
             resolve(result);
         })
     })
@@ -19,8 +21,13 @@ async function getSessionId() {
         method: 'GET',
     })
 
-    const phpsessid = await response.headers.get('set-cookie').split(';')[0];
-    return phpsessid;
+    if(response.status === 200) {
+        const phpsessid = await response.headers.get('set-cookie').split(';')[0];
+        return phpsessid;
+    } else {
+        return;
+    }
+
 }
 
 async function validateSessionId(username, password, phpsessid) {
