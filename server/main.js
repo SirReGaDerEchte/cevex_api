@@ -1,3 +1,4 @@
+const { slowDown } = require('express-slow-down');
 const express = require('express')
 const app = express();
 const port = 9001;
@@ -5,6 +6,14 @@ const port = 9001;
 const cevex = require('./cevex')
 const frettir = require('./frettir')
 
+
+const limiter = slowDown({
+    windowMs: 5 * 60 * 1000,
+    delayAfter: 5,
+    delayMs: () => 5000,
+})
+
+app.use(limiter)
 app.use(express.urlencoded({ extended: true }));
 
 app.post('/data', (req, res) => {
@@ -22,7 +31,6 @@ app.post('/data', (req, res) => {
     
     cevex.retrieveData(username, password, school)
     .then((result) => {
-        // TODO: wird auch aufgerufen, wenn 404 (falsche Eingabe bei Schule)
         frettir.sendMessage("Successfully retrieved userdata.")
         res.status(200)
         res.send(result)
